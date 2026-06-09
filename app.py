@@ -5,7 +5,7 @@ st.set_page_config(page_title="币浪浪仓位精算器", page_icon="🪙", layo
 
 # 手机端顶栏样式美化
 st.title("🪙 币浪浪仓位精算器")
-st.caption("已自动注入万分之四（0.02%）双向手续费控制逻辑")
+st.caption("已自动注入万分之二（0.02%）双向手续费控制逻辑")
 st.markdown("---")
 
 # 1. 输入区域（value=None 即可实现完全空白，placeholder 是灰色的提示文字）
