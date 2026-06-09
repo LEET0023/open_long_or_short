@@ -5,21 +5,42 @@ st.set_page_config(page_title="币浪浪仓位精算器", page_icon="🪙", layo
 
 # 手机端顶栏样式美化
 st.title("🪙 币浪浪仓位精算器")
-st.caption("已自动注入万分之四（0.04%）双向手续费控制逻辑")
+st.caption("已自动注入万分之四（0.02%）双向手续费控制逻辑")
 st.markdown("---")
 
-# 1. 输入区域（默认值全部改成了 0.0）
-entry_price = st.number_input("👉 请输入【当前开仓价格】(U)", min_value=0.0, value=0.0, step=0.1, format="%.2f")
-stop_loss_price = st.number_input("👉 请输入【计划止损价格】(U)", min_value=0.0, value=0.0, step=0.1, format="%.2f")
-max_loss = st.number_input("👉 请输入【你能接受的最大亏损】(U)", min_value=0.0, value=10.0, step=1.0, format="%.2f")  # 亏损额建议保留个10U，省得每次手输
+# 1. 输入区域（value=None 即可实现完全空白，placeholder 是灰色的提示文字）
+entry_price = st.number_input(
+    "👉 请输入【当前开仓价格】(U)", 
+    min_value=0.0, 
+    value=None, 
+    placeholder="例如: 60000.00", 
+    format="%.2f"
+)
+
+stop_loss_price = st.number_input(
+    "👉 请输入【计划止损价格】(U)", 
+    min_value=0.0, 
+    value=None, 
+    placeholder="例如: 59400.00", 
+    format="%.2f"
+)
+
+max_loss = st.number_input(
+    "👉 请输入【你能接受的最大亏损】(U)", 
+    min_value=0.0, 
+    value=None, 
+    placeholder="例如: 10.00", 
+    format="%.2f"
+)
 
 st.markdown("---")
 
 # 2. 核心计算逻辑
-fee_rate = 0.0004  # 万四手续费
+fee_rate = 0.0002  # 万四手续费
 
-# 只有当入场价和止损价都大于 0 时，才激活计算，否则不显示结果
-if entry_price > 0 and stop_loss_price > 0:
+# 只有当三个框都输入了有效数字，且不为 None 时，才触发计算
+if entry_price and stop_loss_price and max_loss:
+    
     # 计算价格波动百分比
     price_drop_pct = abs(entry_price - stop_loss_price) / entry_price
     
@@ -54,5 +75,5 @@ if entry_price > 0 and stop_loss_price > 0:
             st.write(f"• **双向手续费损耗:** {estimated_fees:.2f} U")
             st.write(f"• **预计总共亏损:** {pure_market_loss + estimated_fees:.2f} U")
 else:
-    # 还没输价格时，下方显示这个温馨提示，界面很干净
-    st.info("💡 请在上方输入【开仓价】和【止损价】开始精算仓位。")
+    # 只要有任何一个框是空的，就保持干净的提示状态
+    st.info("💡 请在上方输入【开仓价】、【止损价】和【最大亏损金额】开始计算。")
